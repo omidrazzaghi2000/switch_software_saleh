@@ -42,7 +42,7 @@ void SenderSocket::StartTransmitting()
 
     /* Generate fake data */
     std::string msg1 = "Hello I am message 1 from Omid in which ";
-    std::string msg2 = "Omid is very nice and attractive.";
+    std::string msg2 = "Omid is very nice and attractive . :))))";
 
     int frame_number = 0;
 
@@ -67,7 +67,7 @@ void SenderSocket::StartTransmitting()
             if(frame_number == 0xff){
                 frame_number = 0;
             }
-            printf("[sender] %s: sent packet %lu bytes\n", sender_id.c_str() , numbytes);
+            printf("[sender] %s: sent packet successfully\n", sender_id.c_str() );
         }
 
         sleep(sleep_time);

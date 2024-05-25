@@ -8,7 +8,7 @@ FPGA_Packet::FPGA_Packet(const char *raw_data, unsigned int numbyte) {
 
     /* extract id */
     source_id = "";
-    for(int i = START_INDEX_ID; i < END_INDEX_ID ; i++){
+    for(int i = START_INDEX_ID; i <= END_INDEX_ID ; i++){
        source_id += raw_data[i];
     }
 

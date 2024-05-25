@@ -30,7 +30,7 @@
 class ReceiverSocket{
 
     public:
-        ReceiverSocket(const char * _ifName,std::string _sender_id):interface_name(_ifName),sender_id(std::move(_sender_id)){}
+        ReceiverSocket(const char * _ifName,std::string _sender_id,std::shared_ptr<SharedQueue<FPGA_Packet>> _queue_ptr):interface_name(_ifName),sender_id(std::move(_sender_id)),_queue_shared_ptr(std::move(_queue_ptr)){}
 
         void StartReceiving();
         
@@ -39,6 +39,6 @@ class ReceiverSocket{
         bool isActive = false;
         const char * interface_name;
         std::string sender_id;
-        SharedQueue<FPGA_Packet> _queue;
+        std::shared_ptr<SharedQueue<FPGA_Packet>> _queue_shared_ptr;
 
 };

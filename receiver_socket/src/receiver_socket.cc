@@ -68,7 +68,8 @@ void ReceiverSocket::StartReceiving()
         if(numbytes == CURRENT_FPGA_PACKET_SIZE){
             curPacket = FPGA_Packet((char *)buf,numbytes);
             if(curPacket.source_id == sender_id){
-                printf("[listener] %s: got packet %lu bytes\n", curPacket.data.c_str() ,numbytes);
+                _queue_shared_ptr->push_back(curPacket);
+                printf("\033[43m [listener] %s: got packet %lu bytes \033[0m\n", curPacket.data.c_str() ,numbytes);
             }
         }
 
