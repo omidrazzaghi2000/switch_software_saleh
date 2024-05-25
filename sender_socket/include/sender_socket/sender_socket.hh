@@ -19,7 +19,8 @@
 #include <unistd.h>		/* exit */
 #include <time.h>
 #include <iostream>
-
+#include <sstream>
+#include <iomanip> /* std::std::setprecision */
 #include <vector>
 
 #define SIZE_OF_BUFFERS 4096

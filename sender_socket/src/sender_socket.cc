@@ -12,7 +12,7 @@ void SenderSocket::StartTransmitting()
     struct ifreq if_idx;
     struct ifreq if_mac;
     struct sockaddr_ll socket_address;
-    int numbytes;
+    long int numbytes;
 
     /* Open RAW socket to send on */
     if ((sockfd = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL))) == -1) {
@@ -44,18 +44,29 @@ void SenderSocket::StartTransmitting()
     std::string msg1 = "Hello I am message 1 from Omid in which ";
     std::string msg2 = "Omid is very nice and attractive.";
 
+    int frame_number = 0;
+
     auto msg_array = std::vector<std::string>({msg1 , msg2});
 
-    std::string sendBuf = "[" + sender_id + "]---> " + msg_array[msg_index];
+    std::stringstream frame_number_stream;
+
 
 	while (isActive)
 	{
-
+        frame_number_stream  << std::setfill ('0') << std::setw(2)
+                             << std::hex << frame_number;
+        std::string sendBuf = "[" + sender_id + "]---> " + frame_number_stream.str() + msg_array[msg_index];
+        frame_number_stream.str("");
 
         numbytes = sendto(sockfd, sendBuf.c_str(), sendBuf.length()  , 0, (struct sockaddr*)&socket_address, sizeof(struct sockaddr_ll)) < 0;
         if(numbytes < 0){
             std::cout << "\033[31m" << "[ERROR] : Sender --"<< sender_id <<  "-- Send Failed "<< "\033[0m" << std::endl;
         }else{
+            frame_number++;
+            /*reset frame*/
+            if(frame_number == 0xff){
+                frame_number = 0;
+            }
             printf("[sender] %s: sent packet %lu bytes\n", sender_id.c_str() , numbytes);
         }
 
