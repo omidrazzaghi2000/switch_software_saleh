@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 add_library(${PROJECT_NAME} 
     src/channel.cc
     src/shared_queue.cc
+        src/fpga_packet.cc
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE

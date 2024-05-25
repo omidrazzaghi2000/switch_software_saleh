@@ -47,11 +47,11 @@ T &SharedQueue<T>::front()
     return queue_.front();
 }
 
-template <class T>
-struct TypeIsQueuePacket
-{
-    static const bool value = false;
-};
+//template <class T>
+//struct TypeIsQueuePacket
+//{
+//    static const bool value = false;
+//};
 
 //template <>
 //struct TypeIsQueuePacket<QueuePacket>

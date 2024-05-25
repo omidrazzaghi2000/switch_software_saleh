@@ -20,12 +20,17 @@
 #include <time.h>
 #include <iostream>
 
+#include <channel/fpga_packet.hh>
+#include <channel/shared_queue.hpp>
+#include <utility>
+
 #define SIZE_OF_BUFFERS 4096
+#define CURRENT_FPGA_PACKET_SIZE 59
 
 class ReceiverSocket{
 
     public:
-        ReceiverSocket(const char * _ifName):interface_name(_ifName){}
+        ReceiverSocket(const char * _ifName,std::string _sender_id):interface_name(_ifName),sender_id(std::move(_sender_id)){}
 
         void StartReceiving();
         
@@ -33,4 +38,7 @@ class ReceiverSocket{
         int sockfd;
         bool isActive = false;
         const char * interface_name;
+        std::string sender_id;
+        SharedQueue<FPGA_Packet> _queue;
+
 };

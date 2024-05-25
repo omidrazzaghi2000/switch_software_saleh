@@ -50,16 +50,29 @@ void ReceiverSocket::StartReceiving()
 	sockaddr_ll address;
 	socklen_t len = sizeof(address);
 
+    FPGA_Packet curPacket;
+
 	while (isActive)
 	{
 		numbytes = recvfrom(sockfd, buf, sizeof(buf), 0, (struct sockaddr *)&address, &len);
+
 
         /* It is commented because in this test we send packets through this interface */
 //        if (address.sll_pkttype == PACKET_OUTGOING)
 //        {
 //            continue;
 //        }
-		printf("[listener] %s: got packet %lu bytes\n", ifName ,numbytes);
+
+
+        /* Check that whether it is a fpga packet or not */
+        if(numbytes == CURRENT_FPGA_PACKET_SIZE){
+            curPacket = FPGA_Packet((char *)buf,numbytes);
+            if(curPacket.source_id == sender_id){
+                printf("[listener] %s: got packet %lu bytes\n", curPacket.data.c_str() ,numbytes);
+            }
+        }
+
+
 
 
 	}
