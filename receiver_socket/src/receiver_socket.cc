@@ -54,13 +54,14 @@ void ReceiverSocket::StartReceiving()
 	{
 		numbytes = recvfrom(sockfd, buf, sizeof(buf), 0, (struct sockaddr *)&address, &len);
 
-		printf("listener: got packet %lu bytes\n", numbytes);
+        /* It is commented because in this test we send packets through this interface */
+//        if (address.sll_pkttype == PACKET_OUTGOING)
+//        {
+//            continue;
+//        }
+		printf("[listener] %s: got packet %lu bytes\n", ifName ,numbytes);
 
-		if (address.sll_pkttype == PACKET_OUTGOING)
-		{
 
-			continue;
-		}
 	}
 
 }
