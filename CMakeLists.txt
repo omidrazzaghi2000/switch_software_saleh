@@ -4,9 +4,9 @@ set(PROJECT_NAME oswitch)
 project(${PROJECT_NAME} VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 17)
 
+add_subdirectory(receiver_socket)
 
-
-file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
+# file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 
 
 
@@ -15,5 +15,5 @@ add_executable(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-        
+        receiver_lib
 )
