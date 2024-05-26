@@ -21,6 +21,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         receiver_lib
         sender_lib
         channel_lib
-
+        concatinator_lib
         pthread
 )

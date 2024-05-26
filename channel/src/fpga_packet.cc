@@ -13,7 +13,10 @@ FPGA_Packet::FPGA_Packet(const char *raw_data, unsigned int numbyte) {
     }
 
     /* find frame number */
-    frame_number = int(raw_data[MSB_FRAME_NUM_INDEX])*16+int(raw_data[LSB_FRAME_NUM_INDEX]);
+    std::string temp_frame_number_str = "";
+    temp_frame_number_str+=raw_data[MSB_FRAME_NUM_INDEX];
+    temp_frame_number_str+=raw_data[LSB_FRAME_NUM_INDEX];
+    frame_number = std::stoi(temp_frame_number_str, 0, 16);
 
     /* extract data */
     data = "";

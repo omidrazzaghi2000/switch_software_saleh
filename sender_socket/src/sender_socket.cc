@@ -48,14 +48,14 @@ void SenderSocket::StartTransmitting()
 
     auto msg_array = std::vector<std::string>({msg1 , msg2});
 
+    std::string sendBuf;
     std::stringstream frame_number_stream;
-
 
 	while (isActive)
 	{
         frame_number_stream  << std::setfill ('0') << std::setw(2)
                              << std::hex << frame_number;
-        std::string sendBuf = "[" + sender_id + "]---> " + frame_number_stream.str() + msg_array[msg_index];
+        sendBuf = "[" + sender_id + "]---> " + frame_number_stream.str() + msg_array[msg_index];
         frame_number_stream.str("");
 
         numbytes = sendto(sockfd, sendBuf.c_str(), sendBuf.length()  , 0, (struct sockaddr*)&socket_address, sizeof(struct sockaddr_ll)) < 0;
