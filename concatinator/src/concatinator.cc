@@ -27,7 +27,8 @@ void Concatinator::startConcatinator() {
         frame_number_string_stream.str("");
 
         /* find minimum frame_number */
-        for(auto & queue : queues){
+        for(int i = 0 ; i < queues.size() ; i++){
+            auto queue =  queues[i];
 
             if(queue->front().frame_number < min_frame_number){
                 min_frame_number = queue->front().frame_number;
@@ -59,7 +60,7 @@ void Concatinator::startConcatinator() {
             if(numbytes < 0){
                 std::cout << "\033[31m" << "[ERROR] : Concatenation --"<< id <<  "-- Send Failed "<< "\033[0m" << std::endl;
             }else{
-                printf("[concatinator] %s: sent packet successfully\n", id.c_str() );
+//                printf("[concatinator] %s: sent packet successfully\n", id.c_str() );
             }
         }
 
@@ -70,7 +71,7 @@ void Concatinator::startConcatinator() {
     }
 }
 
-void Concatinator::addQueue(SharedQueue<FPGA_Packet> *queue_ptr) {
+void Concatinator::addQueue(SharedQueue<FPGA_Packet> * queue_ptr) {
     queues.push_back(queue_ptr);
 }
 

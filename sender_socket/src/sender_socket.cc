@@ -41,8 +41,8 @@ void SenderSocket::StartTransmitting()
 
 
     /* Generate fake data */
-    std::string msg1 = "Hello I am message 1 from Omid in which ";
-    std::string msg2 = "Omid is very nice and attractive . :))))";
+    std::string msg1 = "Hello I am message 1 from Omid in whichi";
+    std::string msg2 = "Omid is very nice and attractive . :)))i";
 
     int frame_number = 0;
 
@@ -58,7 +58,7 @@ void SenderSocket::StartTransmitting()
         sendBuf = "[" + sender_id + "]---> " + frame_number_stream.str() + msg_array[msg_index];
         frame_number_stream.str("");
 
-        numbytes = sendto(sockfd, sendBuf.c_str(), sendBuf.length()  , 0, (struct sockaddr*)&socket_address, sizeof(struct sockaddr_ll)) < 0;
+        numbytes = sendto(sockfd, sendBuf.c_str(), sendBuf.length()  , 0, (struct sockaddr*)&socket_address, sizeof(struct sockaddr_ll));
         if(numbytes < 0){
             std::cout << "\033[31m" << "[ERROR] : Sender --"<< sender_id <<  "-- Send Failed "<< "\033[0m" << std::endl;
         }else{
@@ -67,10 +67,10 @@ void SenderSocket::StartTransmitting()
             if(frame_number == 0xff){
                 frame_number = 0;
             }
-            printf("[sender] %s: sent packet successfully\n", sender_id.c_str() );
+//            printf("[sender] %s: sent packet successfully\n", sender_id.c_str() );
         }
 
-        sleep(sleep_time);
+        usleep(sleep_time);
 
 	}
 

@@ -58,21 +58,20 @@ void ReceiverSocket::StartReceiving()
 
 
         /* It is commented because in this test we send packets through this interface */
-//        if (address.sll_pkttype == PACKET_OUTGOING)
-//        {
-//            continue;
-//        }
+        if (address.sll_pkttype == PACKET_OUTGOING)
+        {
+            continue;
+        }
 
 
         /* Check that whether it is a fpga packet or not */
         if(numbytes == CURRENT_FPGA_PACKET_SIZE){
             curPacket = FPGA_Packet((char *)buf,numbytes);
             if(curPacket.source_id == sender_id){
-                _queue.push_back(curPacket);
-                printf("\033[43m [listener] %s: got packet %lu bytes \033[0m\n", curPacket.data.c_str() ,numbytes);
+                _queue_ptr->push_back(curPacket);
+//                printf("\033[43m [listener] %s: got packet %lu bytes \033[0m\n", curPacket.data.c_str() ,numbytes);
             }
         }
-
 
 
 
