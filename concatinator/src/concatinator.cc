@@ -28,24 +28,36 @@ void Concatinator::startConcatinator() {
 
         /* find minimum frame_number */
         for(int i = 0 ; i < queues.size() ; i++){
+
             auto queue =  queues[i];
 
-            if(queue->front().frame_number < min_frame_number){
-                min_frame_number = queue->front().frame_number;
+            curPacket = queue->front();
+            std::cout << "\033[34m" << queue << " - " <<curPacket.data << "\033[0m" <<std::endl;
+
+            if(curPacket.frame_number < min_frame_number){
+                min_frame_number = curPacket.frame_number;
             }
         }
+
+        std::cout << "\033[34m" << min_frame_number << "\033[0m" <<std::endl;
+
 
         /* find hex string of frame_number for sending packet */
         frame_number_string_stream << std::setfill ('0') << std::setw(2)
                               << std::hex << min_frame_number;
 
         /* get all packet with minimum number and pop them */
-        for(auto & queue : queues) {
-            if(queue->front().frame_number == min_frame_number){
+        for(auto queue : queues) {
 
-                packet_src_ids += queue->front().source_id;
+            curPacket = queue->front();
 
-                data_s += queue->front().data;
+            if(curPacket.frame_number == min_frame_number){
+
+                packet_src_ids += curPacket.source_id;
+
+                std::cout << curPacket.data << curPacket.source_id << std::endl;
+
+                data_s += curPacket.data;
 
                 queue->pop_front();
 
@@ -63,8 +75,6 @@ void Concatinator::startConcatinator() {
 //                printf("[concatinator] %s: sent packet successfully\n", id.c_str() );
             }
         }
-
-
 
 
 

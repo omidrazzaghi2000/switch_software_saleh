@@ -23,6 +23,7 @@
 #define RECEIVER_LAN_NAME2 "enp6s0f3"
 
 #define OUTPUT_LAN_INTERFACE_NAME "enp6s0f1"
+#define FINAL_LAN_INTERFACE_NAME "enp3s0f1"
 
 
 void appendToVectorRef(std::vector <std::unique_ptr<SharedQueue<FPGA_Packet>>> & vectorRef){
@@ -34,7 +35,7 @@ int main(){
 
     std::cout << "In the name of Allah" << std::endl;
     std::vector<std::string> RECEIVERS= {RECEIVER_LAN_NAME1,RECEIVER_LAN_NAME2};
-    std::vector <std::unique_ptr<SharedQueue<FPGA_Packet>>> queues_vector;
+    std::vector <SharedQueue<FPGA_Packet> *> queues_vector;
     SharedQueue<FPGA_Packet> temp_shared_queue;//for avoiding copy
 
     auto wifi_interface_queue = SharedQueue<FPGA_Packet>();
@@ -45,9 +46,9 @@ int main(){
         /******************************************************************/
         /** Interface queues                                              */
         /******************************************************************/
-
-        std::unique_ptr<SharedQueue<FPGA_Packet>> queue_ptr = std::make_unique<SharedQueue<FPGA_Packet>>();
-        queues_vector.push_back(std::move(queue_ptr));
+//        auto * queue = new SharedQueue<FPGA_Packet>();
+//        std::unique_ptr<SharedQueue<FPGA_Packet>> queue_ptr = std::make_unique<SharedQueue<FPGA_Packet>>();
+//        queues_vector.push_back(queue);
 
 
 
@@ -60,9 +61,18 @@ int main(){
 //    auto recv_lan = ReceiverSocket(LAN_INTERFACE_NAME,LAN_INTERFACE_ID,std::ref(lan_interface_queue));
 //    std::thread recvWiFiThread(&ReceiverSocket::StartReceiving, recv_wifi);
 //    std::thread recvLanThread(&ReceiverSocket::StartReceiving, recv_lan);
-        auto recvModule = ReceiverSocket(RECEIVERS[rIndex].c_str(), LAN_INTERFACE_ID, queues_vector.at(queues_vector.size()-1));
-        std::thread recvLanThread = std::thread(&ReceiverSocket::StartReceiving, recvModule);
-        recvLanThread.detach();
+        if(rIndex == 0){
+            auto recvModule = ReceiverSocket(RECEIVERS[rIndex].c_str(), LAN_INTERFACE_ID, std::ref(wifi_interface_queue));
+            std::thread recvLanThread = std::thread(&ReceiverSocket::StartReceiving, recvModule);
+            recvLanThread.detach();
+        }
+
+        if(rIndex == 1){
+            auto recvModule = ReceiverSocket(RECEIVERS[rIndex].c_str(), LAN_INTERFACE_ID, std::ref(lan_interface_queue));
+            std::thread recvLanThread = std::thread(&ReceiverSocket::StartReceiving, recvModule);
+            recvLanThread.detach();
+        }
+
     }
 
 
@@ -76,7 +86,7 @@ int main(){
 //    std::thread sendLanThread(&SenderSocket::StartTransmitting,send_to_lan);
     auto msgIndex = 0;
     for(auto &s: SENDERS){
-        auto sendModule = SenderSocket(s.c_str(),LAN_INTERFACE_ID,500,msgIndex);
+        auto sendModule = SenderSocket(s.c_str(),LAN_INTERFACE_ID,1000000,msgIndex);
         msgIndex = !msgIndex;
         std::thread sendLanThread(&SenderSocket::StartTransmitting,sendModule);
         sendLanThread.detach();
@@ -86,11 +96,19 @@ int main(){
     /** Concatinator                                                  */
     /******************************************************************/
     auto concatinator = Concatinator(CONCAT_INTERFACE_ID,OUTPUT_LAN_INTERFACE_NAME);
-    concatinator.addQueue(queues_vector[0].get());
-    concatinator.addQueue(queues_vector[1].get());
+    concatinator.addQueue(&wifi_interface_queue);
+    concatinator.addQueue(&lan_interface_queue);
     std::thread concatinatorThread(&Concatinator::startConcatinator,concatinator);
 //
 //    concatinatorThread.join();
+
+
+    /******************************************************************/
+    /** Final receiver                                                */
+    /******************************************************************/
+//    auto final_recv_module = ReceiverSocket(FINAL_LAN_INTERFACE_NAME,LAN_INTERFACE_ID, nullptr);
+//    std::thread finalReceiverModule(&ReceiverSocket::StartGrabbing,final_recv_module);
+
 
     while(true){
         std::this_thread::sleep_for(std::chrono::minutes(1));
