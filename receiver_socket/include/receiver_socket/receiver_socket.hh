@@ -24,8 +24,8 @@
 #include <channel/shared_queue.hpp>
 #include <utility>
 
-#define SIZE_OF_BUFFERS 4096
-#define CURRENT_FPGA_PACKET_SIZE 60
+#define SIZE_OF_BUFFERS 10000
+#define CURRENT_FPGA_PACKET_SIZE 6163
 
 class ReceiverSocket{
 

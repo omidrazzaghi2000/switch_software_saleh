@@ -11,6 +11,7 @@ add_library(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     channel_lib
+        tcp_client_server
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

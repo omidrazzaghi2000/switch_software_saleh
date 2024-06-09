@@ -56,16 +56,16 @@ void ReceiverSocket::StartReceiving()
 	{
 		numbytes = recvfrom(sockfd, buf, sizeof(buf), 0, (struct sockaddr *)&address, &len);
 
-
+//        std::cout << int(address.sll_addr[2]) << std::endl;
         /* It is commented because in this test we send packets through this interface */
         if (address.sll_pkttype == PACKET_OUTGOING)
         {
             continue;
         }
 
-
         /* Check that whether it is a fpga packet or not */
         if(numbytes == CURRENT_FPGA_PACKET_SIZE){
+
             curPacket = FPGA_Packet((char *)buf,numbytes-1);
 
             if(curPacket.source_id == sender_id){

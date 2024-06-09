@@ -5,7 +5,8 @@
 
 void Concatinator::startConcatinator() {
 
-    defineSocket();
+//    defineSocket();
+    defineTCP_ServerSocket();
 
     isActive = true;
 
@@ -32,14 +33,11 @@ void Concatinator::startConcatinator() {
             auto queue =  queues[i];
 
             curPacket = queue->front();
-//            std::cout << "\033[34m" << queue << " - " <<curPacket.data << "\033[0m" <<std::endl;
 
             if(curPacket.frame_number < min_frame_number){
                 min_frame_number = curPacket.frame_number;
             }
         }
-
-//        std::cout << "\033[34m" << min_frame_number << "\033[0m" <<std::endl;
 
 
         /* find hex string of frame_number for sending packet */
@@ -114,4 +112,42 @@ void Concatinator::defineSocket() {
 
 
     std::cout << "\033[92m" << "[LOG] : Concatinator Socket OK "<< "\033[0m" << std::endl;
+}
+
+void Concatinator::onTCPClientMessageReceived(){
+
+}
+
+void Concatinator::onTCPClientDisconnect(){
+
+}
+
+void Concatinator::defineTCP_ServerSocket(){
+    // start server on port 65123
+    pipe_ret_t startRet = server.start(65123);
+    if (startRet.isSuccessful()) {
+        std::cout << "Server setup succeeded\n";
+    } else {
+        std::cout << "Server setup failed: " << startRet.message() << "\n";
+        return;
+    }
+
+    // configure and register observer1
+    observer1.incomingPacketHandler =  std::bind(&Concatinator::onTCPClientMessageReceived, this);
+    observer1.disconnectionHandler = std::bind(&Concatinator::onTCPClientDisconnect,this);
+    observer1.wantedIP = "127.0.0.1";
+    server.subscribe(observer1);
+
+
+    // accept clients
+    try {
+        std::cout << "waiting for incoming client...\n";
+        std::string clientIP = server.acceptClient(0);
+        std::cout << "accepted new client with IP: " << clientIP << "\n" <<
+                  "== updated list of accepted clients ==" << "\n";
+        server.printClients();
+    } catch (const std::runtime_error &error) {
+        std::cout << "Accepting client failed: " << error.what() << "\n";
+    }
+
 }

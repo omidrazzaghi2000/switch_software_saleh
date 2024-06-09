@@ -8,6 +8,7 @@ add_subdirectory(receiver_socket)
 add_subdirectory(sender_socket)
 add_subdirectory(channel)
 add_subdirectory(concatinator)
+add_subdirectory(tcp_server_client)
 
 # file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 
@@ -22,5 +23,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         sender_lib
         channel_lib
         concatinator_lib
+        tcp_client_server
         pthread
 )

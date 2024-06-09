@@ -23,7 +23,7 @@
 #include <iomanip> /* std::std::setprecision */
 #include <vector>
 
-#define SIZE_OF_BUFFERS 4096
+#define SIZE_OF_BUFFERS 10000
 
 class SenderSocket{
 

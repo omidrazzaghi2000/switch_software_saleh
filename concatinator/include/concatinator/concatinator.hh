@@ -25,7 +25,9 @@
 #include <chrono>
 #include <fcntl.h>		/* open */
 #include <unistd.h>		/* exit */
+#include <csignal>
 
+#include <tcp_server.h>
 #define MAXIMUM_PACKET_SIZE 1500
 
 class Concatinator{
@@ -41,7 +43,18 @@ private:
     std::string output_interface_name;
     int sockfd;
     struct sockaddr_ll socket_address;
+
     std::string id;
+    TcpServer server;
+
+
+    server_observer_t observer1, observer2;
+
+    void onTCPClientMessageReceived();
+
+    void onTCPClientDisconnect();
+
+    void defineTCP_ServerSocket();
 };
 
 
