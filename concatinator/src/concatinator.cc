@@ -32,14 +32,14 @@ void Concatinator::startConcatinator() {
             auto queue =  queues[i];
 
             curPacket = queue->front();
-            std::cout << "\033[34m" << queue << " - " <<curPacket.data << "\033[0m" <<std::endl;
+//            std::cout << "\033[34m" << queue << " - " <<curPacket.data << "\033[0m" <<std::endl;
 
             if(curPacket.frame_number < min_frame_number){
                 min_frame_number = curPacket.frame_number;
             }
         }
 
-        std::cout << "\033[34m" << min_frame_number << "\033[0m" <<std::endl;
+//        std::cout << "\033[34m" << min_frame_number << "\033[0m" <<std::endl;
 
 
         /* find hex string of frame_number for sending packet */
@@ -54,8 +54,6 @@ void Concatinator::startConcatinator() {
             if(curPacket.frame_number == min_frame_number){
 
                 packet_src_ids += curPacket.source_id;
-
-                std::cout << curPacket.data << curPacket.source_id << std::endl;
 
                 data_s += curPacket.data;
 

@@ -66,9 +66,7 @@ void ReceiverSocket::StartReceiving()
 
         /* Check that whether it is a fpga packet or not */
         if(numbytes == CURRENT_FPGA_PACKET_SIZE){
-            curPacket = FPGA_Packet((char *)buf,numbytes);
-
-
+            curPacket = FPGA_Packet((char *)buf,numbytes-1);
 
             if(curPacket.source_id == sender_id){
 //                std::cout << "\033[37m" << &_queue << " - " <<curPacket.data << "-" << curPacket.frame_number << "\033[0m" <<std::endl;
@@ -144,11 +142,13 @@ void ReceiverSocket::StartGrabbing(){
             continue;
         }
 
+        if(numbytes == 109){
+            /* Check that whether it is a fpga packet or not */
+            AddToFile("omid.txt",(char*)buf);
+        }
 
-        /* Check that whether it is a fpga packet or not */
-        AddToFile("omid.txt", (char*)(buf));
 
-
+        memset(buf,0,sizeof(buf));
 
     }
 }
