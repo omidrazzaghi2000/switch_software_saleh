@@ -51,14 +51,16 @@ void SenderSocket::StartTransmitting()
     std::string sendBuf;
     std::stringstream frame_number_stream;
 
+
 	while (isActive)
 	{
         frame_number_stream  << std::setfill ('0') << std::setw(2)
                              << std::hex << frame_number;
+
         sendBuf = "[" + sender_id + "]---> " + frame_number_stream.str() + msg_array[msg_index];
         frame_number_stream.str("");
 
-        numbytes = sendto(sockfd, sendBuf.c_str(), sendBuf.length()  , MSG_DONTROUTE, (struct sockaddr*)&socket_address, sizeof(struct sockaddr_ll));
+        numbytes = sendto(sockfd, sendBuf.c_str(), sendBuf.length()  , 0, (struct sockaddr*)&socket_address, sizeof(struct sockaddr_ll));
         if(numbytes < 0){
             std::cout << "\033[31m" << "[ERROR] : Sender --"<< sender_id <<  "-- Send Failed "<< "\033[0m" << std::endl;
 

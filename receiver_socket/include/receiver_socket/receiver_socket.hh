@@ -26,7 +26,7 @@
 
 #define SIZE_OF_BUFFERS 10000
 #define CURRENT_FPGA_PACKET_SIZE 6163
-
+#define JUMBO_PKT_SIZE 9216
 class ReceiverSocket{
 
     public:

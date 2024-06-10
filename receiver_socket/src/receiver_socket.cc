@@ -56,7 +56,7 @@ void ReceiverSocket::StartReceiving()
 	{
 		numbytes = recvfrom(sockfd, buf, sizeof(buf), 0, (struct sockaddr *)&address, &len);
 
-//        std::cout << int(address.sll_addr[2]) << std::endl;
+
         /* It is commented because in this test we send packets through this interface */
         if (address.sll_pkttype == PACKET_OUTGOING)
         {
@@ -141,8 +141,7 @@ void ReceiverSocket::StartGrabbing(){
         {
             continue;
         }
-
-        if(numbytes == 109){
+        if(numbytes > 12000){
             /* Check that whether it is a fpga packet or not */
             AddToFile("omid.txt",(char*)buf);
         }

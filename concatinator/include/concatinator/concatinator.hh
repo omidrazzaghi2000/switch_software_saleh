@@ -28,8 +28,9 @@
 #include <csignal>
 
 #include <tcp_server.h>
-#define MAXIMUM_PACKET_SIZE 1500
-
+#define MAXIMUM_PACKET_SIZE 10000
+unsigned short checksum(void *b, int len);
+void create_ip_header(char *buffer, const char *src_ip, const char *dst_ip, int id, int frag_offset,bool more_fragments, int data_len);
 class Concatinator{
 public:
     Concatinator(std::string _id,std::string  output):output_interface_name(std::move(output)),id(std::move(_id)){}
@@ -43,12 +44,12 @@ private:
     std::string output_interface_name;
     int sockfd;
     struct sockaddr_ll socket_address;
-
+    socklen_t len = sizeof(socket_address);
     std::string id;
-    TcpServer server;
-
-
-    server_observer_t observer1, observer2;
+//    TcpServer server;
+//
+//
+//    server_observer_t observer1, observer2;
 
     void onTCPClientMessageReceived();
 

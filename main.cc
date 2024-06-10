@@ -18,20 +18,14 @@
 #define LAN_INTERFACE_NAME "enp0s31f6"
 #define WIFI_INTERFACE_NAME "wlx3460f954dcac"
 
-#define SENDER_LAN_NAME1 "enp3s0f2"
-#define SENDER_LAN_NAME2 "enp3s0f3"
+#define SENDER_LAN_NAME1 "enp6s0f2"
+#define SENDER_LAN_NAME2 "enp6s0f3"
 
-#define RECEIVER_LAN_NAME1 "enp6s0f3"
-#define RECEIVER_LAN_NAME2 "enp6s0f2"
+#define RECEIVER_LAN_NAME1 "enp3s0f2"
+#define RECEIVER_LAN_NAME2 "enp3s0f3"
 
 #define OUTPUT_LAN_INTERFACE_NAME "enp6s0f1"
 #define FINAL_LAN_INTERFACE_NAME "enp3s0f1"
-
-
-void appendToVectorRef(std::vector <std::unique_ptr<SharedQueue<FPGA_Packet>>> & vectorRef){
-    std::unique_ptr<SharedQueue<FPGA_Packet>> toPush = std::make_unique<SharedQueue<FPGA_Packet>>();
-    vectorRef.push_back(std::move(toPush));
-}
 
 int main(){
 
@@ -44,7 +38,7 @@ int main(){
     auto wifi_interface_queue = SharedQueue<FPGA_Packet>();
     auto lan_interface_queue = SharedQueue<FPGA_Packet>();
 
-    for(int rIndex = 0 ; rIndex < RECEIVERS.size()-1 ; rIndex++) {
+    for(int rIndex = 0 ; rIndex < RECEIVERS.size() ; rIndex++) {
 
         /******************************************************************/
         /** Interface queues                                              */
@@ -81,8 +75,7 @@ int main(){
 //    std::thread sendWiFiThread(&SenderSocket::StartTransmitting,send_to_wifi);
 //    std::thread sendLanThread(&SenderSocket::StartTransmitting,send_to_lan);
     for(int sIndex = 0 ; sIndex < SENDERS.size() ; sIndex++){
-        auto s = SENDERS[sIndex];
-        auto sendModule = SenderSocket(s.c_str(),SENDERS_ID[sIndex],1000000,sIndex);
+        auto sendModule = SenderSocket(SENDERS[sIndex].c_str(),SENDERS_ID[sIndex],1000,sIndex);
         std::thread sendLanThread(&SenderSocket::StartTransmitting,sendModule);
         sendLanThread.detach();
     }
@@ -90,10 +83,10 @@ int main(){
     /******************************************************************/
     /** Concatinator                                                  */
     /******************************************************************/
-//    auto concatinator = Concatinator(CONCAT_INTERFACE_ID,OUTPUT_LAN_INTERFACE_NAME);
-//    concatinator.addQueue(queues_vector.at(0));
-//    concatinator.addQueue(queues_vector.at(1));
-//    std::thread concatinatorThread(&Concatinator::startConcatinator,concatinator);
+    auto concatinator = Concatinator(CONCAT_INTERFACE_ID,OUTPUT_LAN_INTERFACE_NAME);
+    concatinator.addQueue(queues_vector.at(0));
+    concatinator.addQueue(queues_vector.at(1));
+    std::thread concatinatorThread(&Concatinator::startConcatinator,concatinator);
 
 
     /******************************************************************/
